@@ -2,6 +2,42 @@
 Self-Driving Car Engineer Nanodegree Program
 
 ---
+## Writeup
+
+### Model
+
+This project uses the MPC (model preditive controller) to model the vehicle dynamics and actuate the controls. Here we use . kinematic model which is more practical and simple than its counterpart dynamic model which more accurate but complex.
+
+In essence kinematic models are governed by the following equations
+
+      x_[t+1] = x[t] + v[t] * cos(psi[t]) * dt
+      y_[t+1] = y[t] + v[t] * sin(psi[t]) * dt
+      psi_[t+1] = psi[t] + v[t] / Lf * delta[t] * dt
+      v_[t+1] = v[t] + a[t] * dt
+      cte[t+1] = f(x[t]) - y[t] + v[t] * sin(epsi[t]) * dt
+      epsi[t+1] = psi[t] - psides[t] + v[t] * delta[t] / Lf * dt
+
+
+x, y is the Car's position
+psi : Car's heading direction
+v : Car's velocity
+cte : Cross-track error
+epsi : Orientation error
+a : Acceleration
+delta : Steering angle
+
+
+### Values for N and dt
+
+The values chosen for N (duration) and dt(time steps) are 10 and 0.1. I initially tried values starting from 25 and 0.05 respectively as per the class quiz, but found that to be too violent. I kept playing with the numbers such as decreasing the N values to about 25 -> 20 -> 15 -> 10 and  dt values from 0.05 -> 0.06 -> 0.07 -> 0.08 -> 0.09 -> 0.10.  
+
+### Fit Polynomial
+
+The waypoints are preprocessed by transforming them to the vehicle's coordinates. This wil help us to fit a polynomial of 3 degree because the vehicle's x and y coordinates are now at the origin (0, 0).
+
+### Handling Latency
+
+To handle actuator latency of 100ms, the state values are calculated using the model and the delay interval. These values are used instead of the initial one by the MPC solver.
 
 ## Dependencies
 
